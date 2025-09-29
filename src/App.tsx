@@ -42,7 +42,7 @@ const App = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="absolute inset-x-0 top-0 -z-10 h-[420px] bg-gradient-to-b from-ocean-500/20 via-slate-900/40 to-slate-950 blur-3xl" />
-      <div className="relative mx-auto max-w-6xl px-4 pb-20 pt-12 sm:px-6 lg:px-8">
+      <div className="relative mx-auto max-w-5xl px-4 pb-20 pt-10 sm:px-6 lg:max-w-6xl lg:px-8">
         <header className="text-center sm:text-left">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-ocean-100">
             Splitly+
@@ -58,31 +58,33 @@ const App = () => {
         <main className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
           <div className="space-y-8">
             <div className="rounded-3xl border border-white/5 bg-slate-900/40 p-4 shadow-lg shadow-slate-950/40 sm:p-6">
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Workspace</p>
                     <h2 className="mt-1 text-lg font-semibold text-white sm:text-xl">Manage your shared wallet</h2>
                   </div>
                 </div>
-                <div className="flex gap-2 overflow-x-auto rounded-2xl bg-slate-950/60 p-1 text-sm font-medium shadow-inner shadow-slate-950/60">
-                  {managementSections.map((section) => {
-                    const isActive = section.id === activeSectionId;
-                    return (
-                      <button
-                        key={section.id}
-                        type="button"
-                        onClick={() => setActiveSectionId(section.id)}
-                        className={`flex min-w-[140px] flex-1 items-center justify-center rounded-2xl px-4 py-2 transition ${
-                          isActive
-                            ? 'bg-gradient-to-r from-ocean-500 via-blossom-500 to-ocean-400 text-white shadow-lg shadow-ocean-900/30'
-                            : 'text-slate-300 hover:text-white'
-                        }`}
-                      >
-                        {section.label}
-                      </button>
-                    );
-                  })}
+                <div className="rounded-2xl bg-slate-950/60 p-2 shadow-inner shadow-slate-950/60">
+                  <div className="grid grid-cols-2 gap-2 text-sm font-semibold text-slate-300 sm:grid-cols-4 sm:text-base">
+                    {managementSections.map((section) => {
+                      const isActive = section.id === activeSectionId;
+                      return (
+                        <button
+                          key={section.id}
+                          type="button"
+                          onClick={() => setActiveSectionId(section.id)}
+                          className={`w-full rounded-xl px-3 py-2 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean-400/80 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 ${
+                            isActive
+                              ? 'bg-gradient-to-r from-ocean-500 via-blossom-500 to-ocean-400 text-white shadow-lg shadow-ocean-900/20'
+                              : 'bg-transparent text-slate-300 hover:bg-white/5 hover:text-white'
+                          }`}
+                        >
+                          {section.label}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
                 {activeSection ? (
                   <div className="rounded-3xl border border-white/5 bg-white/5 p-5">

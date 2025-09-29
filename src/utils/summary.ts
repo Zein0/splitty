@@ -88,10 +88,10 @@ const calculateTransferEffects = (
   const toEntry = ledger.get(transfer.toId);
   const cents = toCents(transfer.amount);
   if (fromEntry) {
-    fromEntry.balance -= cents;
+    fromEntry.balance += cents;
   }
   if (toEntry) {
-    toEntry.balance += cents;
+    toEntry.balance -= cents;
   }
 };
 
