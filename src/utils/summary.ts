@@ -69,6 +69,7 @@ const calculateIncomeEffects = (
     const entry = ledger.get(participant.id)!;
     const adjustment = remainder > 0 ? 1 : 0;
     entry.balance += baseShare + adjustment;
+    entry.received += baseShare + adjustment;
     if (remainder > 0) {
       remainder -= 1;
     }
@@ -76,7 +77,6 @@ const calculateIncomeEffects = (
   const receiverEntry = ledger.get(income.receiverId);
   if (receiverEntry) {
     receiverEntry.balance -= cents;
-    receiverEntry.received += cents;
   }
 };
 
