@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import ParticipantManager from './components/ParticipantManager';
 import ExpenseManager from './components/ExpenseManager';
 import IncomeManager from './components/IncomeManager';
@@ -5,6 +7,38 @@ import TransferManager from './components/TransferManager';
 import SummaryPanel from './components/SummaryPanel';
 
 const App = () => {
+  const managementSections = useMemo(
+    () => [
+      {
+        id: 'participants',
+        label: 'Participants',
+        description: 'Create your roster and personalise each member.',
+        component: <ParticipantManager />,
+      },
+      {
+        id: 'expenses',
+        label: 'Expenses',
+        description: 'Capture what everyone has paid so far.',
+        component: <ExpenseManager />,
+      },
+      {
+        id: 'income',
+        label: 'Income',
+        description: 'Log refunds or money flowing into the pot.',
+        component: <IncomeManager />,
+      },
+      {
+        id: 'transfers',
+        label: 'Transfers',
+        description: 'Track manual paybacks or adjustments.',
+        component: <TransferManager />,
+      },
+    ],
+    [],
+  );
+  const [activeSectionId, setActiveSectionId] = useState(managementSections[0].id);
+  const activeSection = managementSections.find((section) => section.id === activeSectionId);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="absolute inset-x-0 top-0 -z-10 h-[420px] bg-gradient-to-b from-ocean-500/20 via-slate-900/40 to-slate-950 blur-3xl" />
@@ -23,10 +57,55 @@ const App = () => {
 
         <main className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
           <div className="space-y-8">
-            <ParticipantManager />
-            <ExpenseManager />
-            <IncomeManager />
-            <TransferManager />
+            <div className="rounded-3xl border border-white/5 bg-slate-900/40 p-4 shadow-lg shadow-slate-950/40 sm:p-6">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">Workspace</p>
+                    <h2 className="mt-1 text-lg font-semibold text-white sm:text-xl">Manage your shared wallet</h2>
+                  </div>
+                </div>
+                <div className="flex gap-2 overflow-x-auto rounded-2xl bg-slate-950/60 p-1 text-sm font-medium shadow-inner shadow-slate-950/60">
+                  {managementSections.map((section) => {
+                    const isActive = section.id === activeSectionId;
+                    return (
+                      <button
+                        key={section.id}
+                        type="button"
+                        onClick={() => setActiveSectionId(section.id)}
+                        className={`flex min-w-[140px] flex-1 items-center justify-center rounded-2xl px-4 py-2 transition ${
+                          isActive
+                            ? 'bg-gradient-to-r from-ocean-500 via-blossom-500 to-ocean-400 text-white shadow-lg shadow-ocean-900/30'
+                            : 'text-slate-300 hover:text-white'
+                        }`}
+                      >
+                        {section.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                {activeSection ? (
+                  <div className="rounded-3xl border border-white/5 bg-white/5 p-5">
+                    <p className="text-sm text-slate-300">{activeSection.description}</p>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+            <div className="relative">
+              <AnimatePresence mode="wait">
+                {activeSection ? (
+                  <motion.div
+                    key={activeSection.id}
+                    initial={{ opacity: 0, translateY: 12 }}
+                    animate={{ opacity: 1, translateY: 0 }}
+                    exit={{ opacity: 0, translateY: -12 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {activeSection.component}
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+            </div>
           </div>
           <div className="space-y-8">
             <SummaryPanel />
