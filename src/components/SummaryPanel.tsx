@@ -17,6 +17,15 @@ const SummaryPanel = () => {
     [participants, expenses, incomes, transfers],
   );
 
+  const decoratedTransfers = useMemo(() => {
+    const participantLookup = new Map(participants.map((participant) => [participant.id, participant]));
+    return transfers.map((transfer) => ({
+      transfer,
+      from: participantLookup.get(transfer.fromId),
+      to: participantLookup.get(transfer.toId),
+    }));
+  }, [participants, transfers]);
+
   const handleExportPdf = async () => {
     if (!summaryRef.current) {
       return;
@@ -171,6 +180,49 @@ const SummaryPanel = () => {
           ) : (
             <motion.p layout className="text-sm text-slate-400">
               Balances are even. Great job team! 🎉
+            </motion.p>
+          )}
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-400">
+            Manual transfers
+          </h3>
+          {decoratedTransfers.length > 0 ? (
+            <div className="space-y-3">
+              {decoratedTransfers.map(({ transfer, from, to }) => (
+                <motion.div
+                  layout
+                  key={transfer.id}
+                  className="flex flex-col gap-3 rounded-2xl border border-white/5 bg-slate-900/40 px-4 py-3 text-sm text-slate-100 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">{from?.emoji ?? '💸'}</span>
+                    <div>
+                      <p className="font-semibold text-white">
+                        {from ? from.name : 'Someone'}
+                        <span className="mx-2 text-slate-400">→</span>
+                        {to ? to.name : 'Someone'}
+                      </p>
+                      {transfer.reason ? (
+                        <p className="text-xs uppercase tracking-wide text-slate-400">{transfer.reason}</p>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold text-emerald-200">
+                      {formatCurrency(transfer.amount)}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {new Date(transfer.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <motion.p layout className="text-sm text-slate-400">
+              No manual transfers yet. Any paybacks you record will appear here.
             </motion.p>
           )}
         </div>
