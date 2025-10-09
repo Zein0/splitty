@@ -1,0 +1,13 @@
+{
+    "applinks": {
+        "apps": [],
+        "details": [
+            {
+                "appID": "4VRHZM93KY.com.africellao.myafricell",
+                "paths": [
+                    "/merchant/*"
+                ]
+            }
+        ]
+    }
+}
